@@ -1,0 +1,30 @@
+version: '3.8'
+
+services:
+  app:
+    build: 
+      context: ./flask
+      dockerfile: Dockerfile
+    ports:
+      - "5000:5000"
+    depends_on:
+      - db
+    environment:
+      MYSQL_HOST: db
+      MYSQL_USER: root
+      MYSQL_PASSWORD: ''
+      MYSQL_DB: secret_garden
+
+  db:
+    image: mysql:5.7
+    ports:
+      - "3306:3306"
+    environment:
+      MYSQL_ROOT_PASSWORD: ''
+      MYSQL_DATABASE: secret_garden
+    volumes:
+      - db-data:/var/lib/mysql
+      - ./schema.sql:/docker-entrypoint-initdb.d/schema.sql
+
+volumes:
+  db-data:
